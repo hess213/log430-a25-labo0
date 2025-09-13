@@ -56,3 +56,4 @@ def test_division_by_zero():
 """def test_echec_volontaire():
     calc = Calculator()
     assert calc.addition(2, 2) == 5"""
+#test
