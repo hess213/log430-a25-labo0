@@ -23,32 +23,6 @@ jobs:
           pip install pytest
 
       - name: Tests
-        working-directory: src
-        run: | 
-          python -m pytest 
+        run: pytest -q
 
-      - name: Déploiement via SSH
-        run: |
-          # Install SSH client
-          sudo apt-get update && sudo apt-get install -y openssh-client
 
-          if [ -z "${{ secrets.SSH_SERVER_HOST }}" ]; then
-            echo "ERROR: SSH_SERVER_HOST secret is not set or empty"
-            exit 1
-          else
-            echo "SSH_SERVER_HOST is set"
-          fi
-          
-          # Setup SSH key
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          
-          # Add server to known hosts to avoid host key verification prompt
-          ssh-keyscan -H ${{ secrets.SSH_SERVER_HOST }} >> ~/.ssh/known_hosts
-          
-          # Deploy via SSH
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_SERVER_HOST }} << 'EOF'
-            cd log430-a25-labo0
-            git pull origin main
-          EOF
